@@ -9,8 +9,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        bg: "#10162E",
+        bg_navy: "#121B3F",
+        bg_gray: "#EDE8F5",
+        cus_yellow: "#F6B034",
+        cus_red: "#F31941",
+        cus_green: "#1AF665",
+        btn_gray: "#ADBBDA",
+        text_white: "#FEFEFE",
+        text_gray: "#636363",
+      },
+      fontFamily: {
+        heading: ["Work Sans", "sans-serif"],
+        body: ["Helvetica", "Arial", "sans-serif"],
       },
     },
   },
