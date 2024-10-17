@@ -10,7 +10,9 @@ const workSans = Work_Sans({
 export const metadata: Metadata = {
   title: "Aigendrug F조",
   description: "Find out the appropriate Protein by using Ensemble Models",
-  icons: {},
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

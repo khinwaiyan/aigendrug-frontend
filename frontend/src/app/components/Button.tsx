@@ -16,12 +16,10 @@ export const Button = ({
   disabled = false,
 }: ButtonProps) => {
   const baseStyle =
-    "font-bold text-cus_navy text-sm transition-colors duration-200 rounded-md";
+    "font-bold text-cus_navy text-sm px-6 py-2 break-words transition-colors duration-200 rounded-md shadow shadow-cus_navy";
   const variantStyle = {
-    primary:
-      "w-[116px] h-[46px] cursor-pointer bg-cus_yellow hover:bg-cus_yellow_light",
-    secondary:
-      "w-[90px] h-[46px] cursor-pointer bg-btn_gray hover:bg-[#759BEE]",
+    primary: "cursor-pointer bg-cus_yellow hover:bg-cus_yellow_light",
+    secondary: "cursor-pointer bg-btn_gray hover:bg-[#759BEE]",
     disable: "bg-gray-100 cursor-not-allowed",
   };
   const appliedStyle = disabled ? variantStyle.disable : variantStyle[variant];

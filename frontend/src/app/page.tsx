@@ -1,10 +1,18 @@
-import { Button } from "./components/Button";
+"use client";
+import { Header } from "./components/Header";
 
 // `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
+  const handleClick = () => {
+    console.log("Button clicked!");
+  };
   return (
     <div>
-      <h1 className="font-heading font-bold text-pink-800">Aigendrug</h1>
+      <Header
+        headerLabel="AIGENDRUG"
+        btnText="로그아웃"
+        onClick={handleClick}
+      />
     </div>
   );
 }
