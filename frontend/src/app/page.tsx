@@ -1,3 +1,5 @@
+import { Button } from "./components/Button";
+
 // `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
   return (
