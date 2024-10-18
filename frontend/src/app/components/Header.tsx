@@ -1,16 +1,12 @@
-import { Button } from "./Button";
 type HeaderProps = {
-  headerLabel: string;
-  btnText: string;
-  onClick: () => void;
+  labelL: string;
+  labelR: string;
 };
-export const Header = ({ headerLabel, btnText, onClick }: HeaderProps) => {
+export const Header = ({ labelL, labelR }: HeaderProps) => {
   return (
     <div className="flex items-center justify-between px-10 py-2">
-      <div className="text-2xl font-bold">{headerLabel}</div>
-      <Button onClick={onClick} variant="secondary">
-        {btnText}
-      </Button>
+      <div className="text-2xl font-bold">{labelL}</div>
+      <div className="text-2xl font-bold">{labelR}</div>
     </div>
   );
 };

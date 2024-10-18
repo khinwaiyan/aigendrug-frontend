@@ -9,17 +9,10 @@ import { InputBox } from "@/app/components/InputBox";
 // import { FaExclamation } from "react-icons/fa";
 
 export default function JobDetail() {
-  const handleLogOut = () => {
-    console.log("Logout Button clicked!");
-  };
   return (
     <Wrapper>
-      <Header
-        headerLabel="웨이님 반가워요!"
-        btnText="로그아웃"
-        onClick={handleLogOut}
-      />
-      <div className="JobDetailTable mt-8">
+      <Header labelL="AIGENDRUG" labelR="웨이님 반가워요!" />
+      <div className="JobDetailTable mt-10 px-4">
         <div className="Header grid grid-cols-7 gap-4 text-center bg-cus_navy_light p-4 ">
           <span className="font-bold col-span-1 bg-cus_gray py-1 text-cus_navy rounded break-words ">
             Protein A
@@ -31,7 +24,28 @@ export default function JobDetail() {
           <span className="font-bold col-span-1">실행 날짜</span>
           <span className="col-span-1"></span>
         </div>
-        <div className="Body">
+        <div className="Body pt-4">
+          <div className="row1 bg-cus_gray text-cus_navy grid grid-cols-7 gap-4 text-center p-4 my-4 items-center rounded-lg">
+            <NumBullet className="col-span-1" label="1"></NumBullet>
+            <span className="col-span-1">ligand1</span>
+            <span className="col-span-1">0.9</span>
+            <input
+              type="number"
+              placeholder="실험값"
+              step="any"
+              min="0"
+              max="1"
+              className="col-span-1 py-1 border-2 border-cus_yellow text-cus_gray_light text-center rounded-md cursor-pointer"
+            />
+            <span className="col-span-1 flex justify-center">
+              <TbLoader3
+                className="animate-spin col-span-1 text-cus_yellow "
+                size={28}
+              />
+            </span>
+            <span className="col-span-1">2024-09-15</span>
+            <Button className="col-span-1">실행</Button>
+          </div>
           <div className="row1 bg-cus_gray text-cus_navy grid grid-cols-7 gap-4 text-center p-4 my-4 items-center rounded-lg">
             <NumBullet className="col-span-1" label="1"></NumBullet>
             <span className="col-span-1">ligand1</span>

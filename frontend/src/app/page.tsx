@@ -6,21 +6,14 @@ import { useRouter } from "next/navigation";
 
 // `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
-  const handleLogOut = () => {
-    console.log("Logout Button clicked!");
-  };
   const router = useRouter();
 
   const openJobModal = () => {
-    router.push("/JobModal");
+    router.push("/job-modal");
   };
   return (
     <Wrapper>
-      <Header
-        headerLabel="웨이님 반가워요!"
-        btnText="로그아웃"
-        onClick={handleLogOut}
-      />
+      <Header labelL="AIGENDRUG" labelR="웨이님 반가워요!" />
       <div className="JobTable mt-8">
         <div className="TableHeader grid grid-cols-6 gap-4 text-center bg-cus_navy_light p-4 rounded-lg">
           <span className="font-bold col-span-1">Job</span>
