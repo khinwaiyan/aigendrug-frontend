@@ -2,10 +2,19 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 
 type InputBoxProps = {
   label: string;
+  variant?: "file" | "text";
+  className?: string;
 };
-export const InputBox = ({ label }: InputBoxProps) => {
-  return (
-    <label className="w-[302px] h-[55px] border-4 border-dashed border-cus_yellow flex items-center justify-center cursor-pointer rounded-md break-words transition duration-300">
+
+export const InputBox = ({
+  label,
+  variant = "file",
+  className,
+}: InputBoxProps) => {
+  return variant === "file" ? (
+    <label
+      className={`${className} border-4 border-dashed border-cus_yellow flex items-center justify-center cursor-pointer p-2 rounded-md break-words transition duration-300`}
+    >
       <div className="flex items-center space-x-2">
         <span>
           <IoCloudUploadOutline size={33} />
@@ -14,5 +23,15 @@ export const InputBox = ({ label }: InputBoxProps) => {
       </div>
       <input type="file" className="hidden" />
     </label>
+  ) : (
+    <div
+      className={`${className} border-4 border-solid border-cus_yellow rounded-md p-3 text-center`}
+    >
+      <input
+        type="text"
+        placeholder={label}
+        className="w-full text-center focus:outline-none bg-transparent"
+      />
+    </div>
   );
 };

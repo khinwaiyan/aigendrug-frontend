@@ -17,12 +17,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body className={`${workSans.className}  antialiased`}>{children}</body>
+      <body className={`${workSans.className}  antialiased`}>
+        <div>{children}</div>
+        <div>{modal}</div>
+      </body>
     </html>
   );
 }

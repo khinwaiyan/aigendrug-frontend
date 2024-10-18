@@ -2,11 +2,17 @@
 import { Button } from "./components/Button";
 import { Header } from "./components/Header";
 import { Wrapper } from "./components/Wrapper";
+import { useRouter } from "next/navigation";
 
 // `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
   const handleLogOut = () => {
     console.log("Logout Button clicked!");
+  };
+  const router = useRouter();
+
+  const openJobModal = () => {
+    router.push("/JobModal");
   };
   return (
     <Wrapper>
@@ -35,19 +41,9 @@ export default function Home() {
               View
             </a>
           </div>
-          <div className="row 2 grid grid-cols-6 gap-4 text-center p-4 items-center border-b border-cus_gray_light">
-            <span className="col-span-1">Job 2</span>
-            <span className="col-span-1">Protein B</span>
-            <span className="col-span-1 text-green-500">Completed</span>
-            <span className="col-span-1">2024-09-15</span>
-            <span className="col-span-1">1min 30s</span>
-            <a href="#" className="text-yellow-400 col-span-1 hover:underline">
-              View
-            </a>
-          </div>
         </div>
         <div className="mt-6 flex justify-end">
-          <Button>{"Job 추가 +"}</Button>
+          <Button onClick={openJobModal}>{"Job 추가 +"}</Button>
         </div>
       </div>
     </Wrapper>
