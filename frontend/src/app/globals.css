@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-  @apply font-body antialiased;
+  @apply bg-cus_navy font-body antialiased text-cus_white;
+  min-height: 100vh;
 }
 @layer utilities {
   .text-balance {

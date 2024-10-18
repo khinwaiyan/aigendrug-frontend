@@ -6,8 +6,8 @@ type HeaderProps = {
 };
 export const Header = ({ headerLabel, btnText, onClick }: HeaderProps) => {
   return (
-    <div className="bg-cus_navy text-cus_gray_light flex items-center justify-between px-20 py-4">
-      <div className="text-2xl font-bold text-cus_white">{headerLabel}</div>
+    <div className="flex items-center justify-between px-10 py-2">
+      <div className="text-2xl font-bold">{headerLabel}</div>
       <Button onClick={onClick} variant="secondary">
         {btnText}
       </Button>
