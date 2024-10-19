@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { Button } from "./components/Button";
 import { Header } from "./components/Header";
 import { Wrapper } from "./components/Wrapper";
@@ -36,7 +37,16 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-6 flex justify-end">
-          <Button onClick={openJobModal}>{"Job 추가 +"}</Button>
+          <Button onClick={openJobModal}>
+            {"Job 추가 "}
+            <Image
+              src="/icons/plus.svg"
+              alt="Plus icon"
+              width={16}
+              height={16}
+              className="inline-block"
+            />
+          </Button>
         </div>
       </div>
     </Wrapper>
