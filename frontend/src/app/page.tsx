@@ -9,11 +9,11 @@ export default function Home() {
   const router = useRouter();
 
   const openJobModal = () => {
-    router.push("/job-modal");
+    router.push("/jobmodal");
   };
   return (
     <Wrapper>
-      <Header labelL="AIGENDRUG" labelR="웨이님 반가워요!" />
+      <Header label="AIGENDRUG" />
       <div className="JobTable mt-8">
         <div className="TableHeader grid grid-cols-6 gap-4 text-center bg-cus_navy_light p-4 rounded-lg">
           <span className="font-bold col-span-1">Job</span>

@@ -2,7 +2,7 @@
 import { Button } from "@/app/components/Button";
 import { InputBox } from "@/app/components/InputBox";
 import { useRouter } from "next/navigation";
-import { MdCancel } from "react-icons/md";
+import Image from "next/image";
 
 export default function JobModal() {
   const router = useRouter();
@@ -14,7 +14,12 @@ export default function JobModal() {
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
           onClick={() => router.back()}
         >
-          <MdCancel className="text-cus_yellow" size={28} />
+          <Image
+            src="/icons/cancel.svg"
+            alt="Cancel Icon"
+            width={28}
+            height={28}
+          />
         </button>
         <form className="flex flex-col space-y-5">
           <InputBox
