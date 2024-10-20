@@ -4,6 +4,7 @@ import { Button } from "./components/Button";
 import { Header } from "./components/Header";
 import { Wrapper } from "./components/Wrapper";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
@@ -31,9 +32,12 @@ export default function Home() {
             <span className="col-span-1 text-red-500">Ongoing</span>
             <span className="col-span-1">2024-09-15</span>
             <span className="col-span-1">-</span>
-            <a href="#" className="text-yellow-400 col-span-1 hover:underline">
+            <Link
+              href="/job/2"
+              className="text-yellow-400 col-span-1 hover:underline"
+            >
               View
-            </a>
+            </Link>
           </div>
         </div>
         <div className="mt-6 flex justify-end">

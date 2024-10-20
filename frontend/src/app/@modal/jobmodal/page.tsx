@@ -32,14 +32,14 @@ export default function JobModal() {
             label="Target Protein 이름"
             variant="text"
           />
-          <InputBox
+          {/* <InputBox
             className="text-cus_gray_light"
             label="Ligand 업로드 (리스트)"
           />
           <InputBox
             className="text-cus_gray_light"
             label="IC50 실제 실험값 (리스트)"
-          />
+          /> */}
           <div className="pt-10">
             <Button className="w-full">추가</Button>
           </div>
