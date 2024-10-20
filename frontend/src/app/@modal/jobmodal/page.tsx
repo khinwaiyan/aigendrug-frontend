@@ -1,18 +1,17 @@
 "use client";
 import { Button } from "@/app/components/Button";
 import { InputBox } from "@/app/components/InputBox";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-
-export default function JobModal() {
-  const router = useRouter();
-
+type JobModalProps = {
+  onClose: () => void;
+};
+export default function JobModal({ onClose }: JobModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative bg-white rounded-lg p-16 shadow-lg w-96">
         <button
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          onClick={() => router.back()}
+          onClick={onClose}
         >
           <Image
             src="/icons/cancel.svg"
@@ -32,14 +31,6 @@ export default function JobModal() {
             label="Target Protein 이름"
             variant="text"
           />
-          {/* <InputBox
-            className="text-cus_gray_light"
-            label="Ligand 업로드 (리스트)"
-          />
-          <InputBox
-            className="text-cus_gray_light"
-            label="IC50 실제 실험값 (리스트)"
-          /> */}
           <div className="pt-10">
             <Button className="w-full">추가</Button>
           </div>

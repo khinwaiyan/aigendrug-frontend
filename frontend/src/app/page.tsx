@@ -3,16 +3,22 @@ import Image from "next/image";
 import { Button } from "./components/Button";
 import { Header } from "./components/Header";
 import { Wrapper } from "./components/Wrapper";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import JobModal from "./@modal/jobmodal/page";
+import { useState } from "react";
 
 // `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
-  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openJobModal = () => {
-    router.push("/jobmodal");
+    setIsModalOpen(true);
   };
+
+  const closeJobModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Wrapper>
       <Header label="AIGENDRUG" />
@@ -53,6 +59,7 @@ export default function Home() {
           </Button>
         </div>
       </div>
+      {isModalOpen && <JobModal onClose={closeJobModal} />}
     </Wrapper>
   );
 }
