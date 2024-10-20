@@ -8,6 +8,7 @@ import JobModal from "./components/JobModal";
 import { useCallback, useState, useEffect } from "react";
 import { useService } from "@/service/useService";
 import { Job } from "@/service/job/interface";
+import { formatDate } from "@/utils/formatTime";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,7 +69,7 @@ export default function Home() {
             >
               <span className="col-span-1">{job.name}</span>
               <span className="col-span-1">{job.target_protein_name}</span>
-              <span className="col-span-1">2024-09-15</span>
+              <span className="col-span-1">{formatDate(job.created_at)}</span>
               <Link
                 href={`/job/${job.id}`}
                 className="text-yellow-400 col-span-1 hover:underline"
