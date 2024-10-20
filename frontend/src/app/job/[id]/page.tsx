@@ -26,7 +26,10 @@ export default function JobDetail() {
           const experiments = await experimentService.getAllExperimentsByJobId(
             jobId
           );
-          setExperiments(experiments);
+          const sortedExperiments = experiments.sort(
+            (a, b) => a.predicted_value - b.predicted_value
+          );
+          setExperiments(sortedExperiments);
         } catch (error) {
           console.error("Failed to fetch experiments:", error);
         }
