@@ -4,10 +4,9 @@ import { Button } from "./components/Button";
 import { Header } from "./components/Header";
 import { Wrapper } from "./components/Wrapper";
 import Link from "next/link";
-import JobModal from "./@modal/jobmodal/page";
+import JobModal from "./components/JobModal";
 import { useState } from "react";
 
-// `app/page.tsx` is the UI for the `/` URL
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
