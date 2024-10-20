@@ -7,7 +7,7 @@ import Image from "next/image";
 
 type JobModalProps = {
   onClose: () => void;
-  onJobAdded: () => void; // Callback to notify the parent component when a job is added
+  onJobAdded: () => void;
 };
 
 export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
@@ -44,6 +44,9 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
           />
         </button>
         <form className="flex flex-col space-y-5" onSubmit={handleJobSubmit}>
+          <h2 className="text-center text-cus_navy text-2xl font-bold pb-10">
+            JOB 추가
+          </h2>
           <InputBox
             className="text-cus_gray_light"
             label="Job 이름"
