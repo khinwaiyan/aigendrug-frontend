@@ -4,12 +4,16 @@ type InputBoxProps = {
   label: string;
   variant?: "file" | "text";
   className?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // onChange handler for controlled input
 };
 
 export const InputBox = ({
   label,
   variant = "file",
   className,
+  value,
+  onChange,
 }: InputBoxProps) => {
   return variant === "file" ? (
     <label
@@ -31,6 +35,8 @@ export const InputBox = ({
         type="text"
         placeholder={label}
         className="w-full text-center focus:outline-none bg-transparent"
+        value={value} // Use value for controlled input
+        onChange={onChange} // Trigger onChange
       />
     </div>
   );

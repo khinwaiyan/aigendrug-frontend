@@ -34,4 +34,12 @@ export class jobService {
       throw error;
     }
   }
+
+  public async deleteJob(id: number): Promise<void> {
+    try {
+      await this.instance.delete(`/job/${id}`);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

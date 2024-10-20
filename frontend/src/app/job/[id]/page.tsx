@@ -74,7 +74,7 @@ export default function JobDetail() {
         </div>
       </div>
       <div className="mt-8 flex justify-end">
-        <InputBox label="Ligand 업로드 (리스트)" />
+        <InputBox variant="text" label="Ligand 업로드" />
       </div>
     </Wrapper>
   );

@@ -7,7 +7,6 @@ export const useService = () => {
     headers: {
       "Content-Type": "application/json",
     },
-    withCredentials: true,
   });
 
   instance.interceptors.response.use(
