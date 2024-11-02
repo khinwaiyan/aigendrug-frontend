@@ -1,7 +1,7 @@
 export interface Job {
   id: number;
   name: string;
-  created_at: string;
+  created_at: Date;
   target_protein_name: string;
 }
 

@@ -1,6 +1,5 @@
-export const formatDate = (isoDate: string) => {
-  const date = new Date(isoDate);
-  const formattedDate = date.toLocaleDateString("en-US", {
+export const formatDate = (isoDate: Date) => {
+  const formattedDate = isoDate.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -8,9 +7,8 @@ export const formatDate = (isoDate: string) => {
   return formattedDate;
 };
 
-export const formatTime = (isoDate: string) => {
-  const date = new Date(isoDate);
-  const formattedTime = date.toLocaleTimeString("en-US", {
+export const formatTime = (isoDate: Date) => {
+  const formattedTime = isoDate.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,

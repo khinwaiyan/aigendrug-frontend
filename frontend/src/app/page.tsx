@@ -9,24 +9,20 @@ import { useCallback, useState, useEffect } from "react";
 import { useService } from "@/service/useService";
 import { Job } from "@/service/job/interface";
 import { formatDate } from "@/utils/formatTime";
+import { mockJobs } from "@/mocks/mockData";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
-  const { jobService } = useService();
+  // const { jobService } = useService();
 
-  const fetchJobs = useCallback(async () => {
-    try {
-      const jobList = await jobService.getAllJobs();
-      setJobs(jobList);
-    } catch (error) {
-      console.error("Failed to fetch jobs:", error);
-    }
-  }, [jobService]);
+  const loadMockJobs = useCallback(() => {
+    setJobs(mockJobs);
+  }, []);
 
   useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
+    loadMockJobs();
+  }, [loadMockJobs]);
 
   const openJobModal = () => {
     setIsModalOpen(true);
@@ -36,19 +32,19 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  const handleJobAdded = () => {
-    fetchJobs(); // Fetch the updated list of jobs
-  };
-  const handleDeleteJob = async (id: number) => {
-    if (confirm("Are you sure you want to delete this job?")) {
-      try {
-        await jobService.deleteJob(id);
-        fetchJobs(); // Re-fetch jobs after deletion
-      } catch (error) {
-        console.error("Failed to delete job:", error);
-      }
-    }
-  };
+  // const handleJobAdded = () => {
+  //   fetchJobs(); // Fetch the updated list of jobs
+  // };
+  // const handleDeleteJob = async (id: number) => {
+  //   if (confirm("Are you sure you want to delete this job?")) {
+  //     try {
+  //       await jobService.deleteJob(id);
+  //       fetchJobs(); // Re-fetch jobs after deletion
+  //     } catch (error) {
+  //       console.error("Failed to delete job:", error);
+  //     }
+  //   }
+  // };
 
   return (
     <Wrapper>
@@ -56,9 +52,9 @@ export default function Home() {
       <div className="JobTable mt-8">
         <div className="TableHeader grid grid-cols-5 gap-4 text-center bg-cus_navy_light p-4 rounded-lg">
           <span className="font-bold col-span-1">Job</span>
-          <span className="font-bold col-span-1">Protein Name</span>
+          <span className="font-bold col-span-1">Protein</span>
           <span className="font-bold col-span-1">Start Date</span>
-          <span className="col-span-1"></span>
+          <span className="font-bold col-span-1 text-yellow-400">Details</span>
           <span className="col-span-1 flex justify-center"></span>
         </div>
         <div className="TableBody rounded-lg mt-2">
@@ -78,7 +74,7 @@ export default function Home() {
               </Link>
               <span className="col-span-1 flex justify-center">
                 <div
-                  onClick={() => handleDeleteJob(job.id)}
+                  // onClick={() => handleDeleteJob(job.id)}
                   className="cursor-pointer"
                 >
                   <Image
@@ -94,7 +90,7 @@ export default function Home() {
         </div>
         <div className="mt-6 flex justify-end">
           <Button onClick={openJobModal}>
-            {"Job 추가 "}
+            {"Add Job  "}
             <Image
               src="/icons/plus.svg"
               alt="Plus icon"
@@ -105,9 +101,7 @@ export default function Home() {
           </Button>
         </div>
       </div>
-      {isModalOpen && (
-        <JobModal onClose={closeJobModal} onJobAdded={handleJobAdded} />
-      )}
+      {isModalOpen && <JobModal onClose={closeJobModal} />}
     </Wrapper>
   );
 }

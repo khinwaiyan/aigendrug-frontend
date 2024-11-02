@@ -17,7 +17,7 @@ export const InputBox = ({
 }: InputBoxProps) => {
   return variant === "file" ? (
     <label
-      className={`${className} border-4 border-dashed border-cus_yellow flex items-center justify-center cursor-pointer p-2 rounded-md break-words transition duration-300`}
+      className={`${className} text-cus_gray_light border-4 border-dashed border-cus_yellow flex items-center justify-center cursor-pointer p-2 rounded-md break-words transition duration-300`}
     >
       <div className="flex items-center space-x-2">
         <span>
@@ -29,7 +29,7 @@ export const InputBox = ({
     </label>
   ) : (
     <div
-      className={`${className} border-4 border-solid border-cus_yellow rounded-md p-3 text-center`}
+      className={`${className} text-cus_gray_light border-4 border-solid border-cus_yellow rounded-md p-3 text-center`}
     >
       <input
         type="text"
