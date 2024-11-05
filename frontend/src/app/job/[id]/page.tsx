@@ -169,7 +169,7 @@ export default function JobDetail() {
                 {formatDate(experiment.created_at)}
               </span>
               <Button
-                className="col-span-1"
+                className="col-span-1 text-sm"
                 onClick={() => handleExecute(experiment.id)}
               >
                 Run
