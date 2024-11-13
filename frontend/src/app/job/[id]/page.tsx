@@ -44,17 +44,16 @@ export default function JobDetail() {
 
   const getIconSrc = (status: number) => {
     switch (status) {
-      case 1: // Training
+      case 1:
         return "/icons/loader.svg";
-      case 2: // Trained
+      case 2:
         return "/icons/checkCircle.svg";
-      case 3: // Failed
+      case 3:
         return "/icons/error.svg";
       default:
-        return "-"; // No icon for other statuses
+        return "-";
     }
   };
-  // Handle change in the measured value input
   const handleMeasuredValueChange = (experimentId: number, value: string) => {
     setMeasuredValues((prevValues) => ({
       ...prevValues,

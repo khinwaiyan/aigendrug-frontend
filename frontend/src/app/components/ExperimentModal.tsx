@@ -15,12 +15,10 @@ export default function ExperimentModal({
 }: ExperimentModalProps) {
   const [ligand, setLigand] = useState("");
 
-  // Handle ligand input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLigand(e.target.value);
   };
 
-  // Handle creating the experiment when the button is clicked
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
     if (ligand) {
