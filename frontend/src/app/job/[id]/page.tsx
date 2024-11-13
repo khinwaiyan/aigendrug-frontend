@@ -9,6 +9,7 @@ import { NumBullet } from "@/app/components/NumBullet";
 import Image from "next/image";
 import { formatDate } from "@/utils/formatTime";
 import { useParams } from "next/navigation";
+import { mockExperiments } from "@/mocks/mockData";
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -21,23 +22,40 @@ export default function JobDetail() {
 
   useEffect(() => {
     if (!isNaN(jobId)) {
-      const fetchExperiments = async () => {
-        try {
-          const experiments = await experimentService.getAllExperimentsByJobId(
-            jobId
-          );
-          const sortedExperiments = experiments.sort(
-            (a, b) => a.predicted_value - b.predicted_value
-          );
-          setExperiments(sortedExperiments);
-        } catch (error) {
-          console.error("Failed to fetch experiments:", error);
-        }
+      const loadMockExperiments = () => {
+        const sortedExperiments = mockExperiments.sort((a, b) => {
+          const aValue =
+            a.predicted_value !== null ? a.predicted_value : Infinity;
+          const bValue =
+            b.predicted_value !== null ? b.predicted_value : Infinity;
+          return aValue - bValue;
+        });
+        setExperiments(sortedExperiments);
       };
 
-      fetchExperiments();
+      loadMockExperiments();
     }
-  }, [jobId, experimentService]);
+  }, [jobId]);
+
+  // useEffect(() => {
+  //   if (!isNaN(jobId)) {
+  //     const fetchExperiments = async () => {
+  //       try {
+  //         const experiments = await experimentService.getAllExperimentsByJobId(
+  //           jobId
+  //         );
+  //         const sortedExperiments = experiments.sort(
+  //           (a, b) => a.predicted_value - b.predicted_value
+  //         );
+  //         setExperiments(sortedExperiments);
+  //       } catch (error) {
+  //         console.error("Failed to fetch experiments:", error);
+  //       }
+  //     };
+
+  //     fetchExperiments();
+  //   }
+  // }, [jobId, experimentService]);
 
   const getIconSrc = (status: number) => {
     switch (status) {
@@ -86,30 +104,29 @@ export default function JobDetail() {
 
   return (
     <Wrapper>
-      <Header label="AIGENDRUG" />
+      <Header label="AIGENDRUG" labelR="Protein A" />
       <div className="JobDetailTable mt-10 px-4">
-        <div className="Header grid grid-cols-7 gap-4 text-center bg-cus_navy_light p-4 ">
-          <span className="font-bold col-span-1 bg-cus_gray py-1 text-cus_navy rounded break-words ">
-            Protein A
-          </span>
-          <span className="font-bold col-span-1">Ligand</span>
-          <span className="font-bold col-span-1">예측값</span>
-          <span className="font-bold col-span-1">실험값</span>
+        <div className="Header grid grid-cols-8 gap-4 flex items-center text-center bg-cus_navy_light p-4 ">
+          <span className="font-bold col-span-1">Rank</span>
+          <span className="font-bold col-span-2">Ligand</span>
+          <span className="font-bold col-span-1">Expected Value</span>
+          <span className="font-bold col-span-1">Observed Value</span>
           <span className="font-bold col-span-1">Status</span>
-          <span className="font-bold col-span-1">실행 날짜</span>
+          <span className="font-bold col-span-1">Date</span>
           <span className="col-span-1"></span>
         </div>
         <div className="Body pt-4">
           {experiments.map((experiment, index) => (
             <div
               key={experiment.id}
-              className="row1 bg-cus_gray text-cus_navy grid grid-cols-7 gap-4 text-center p-4 my-4 items-center rounded-lg"
+              className="row1 bg-cus_gray text-cus_navy grid grid-cols-8 gap-4 text-center p-4 my-4 items-center justify-center rounded-lg"
             >
-              <NumBullet
-                className="col-span-1"
-                label={(index + 1).toString()}
-              />
-              <span className="col-span-1">{experiment.ligand_smiles}</span>
+              <span className="col-span-1 flex justify-center">
+                <NumBullet label={(index + 1).toString()} />
+              </span>
+              <span className="col-span-2 break-words whitespace-normal">
+                {experiment.ligand_smiles}
+              </span>
               <span className="col-span-1">{experiment.predicted_value}</span>
 
               {experiment.measured_value ? (
@@ -152,10 +169,10 @@ export default function JobDetail() {
                 {formatDate(experiment.created_at)}
               </span>
               <Button
-                className="col-span-1"
+                className="col-span-1 text-sm"
                 onClick={() => handleExecute(experiment.id)}
               >
-                실행
+                Run
               </Button>
             </div>
           ))}

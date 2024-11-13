@@ -31,9 +31,9 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative bg-white rounded-lg p-16 shadow-lg w-96">
+      <div className="relative bg-white rounded-lg p-12 shadow-lg w-96">
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
           onClick={onClose}
         >
           <Image
@@ -44,26 +44,25 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
           />
         </button>
         <form className="flex flex-col space-y-5" onSubmit={handleJobSubmit}>
-          <h2 className="text-center text-cus_navy text-2xl font-bold pb-10">
-            JOB 추가
+          <h2 className="text-center text-cus_navy text-2xl font-bold pb-4">
+            New Job
           </h2>
           <InputBox
-            className="text-cus_gray_light"
-            label="Job 이름"
+            label="Job Name"
             variant="text"
             value={jobName}
             onChange={(e) => setJobName(e.target.value)}
           />
           <InputBox
-            className="text-cus_gray_light"
-            label="Target Protein 이름"
+            label="Target Protein Name"
             variant="text"
             value={proteinName}
             onChange={(e) => setProteinName(e.target.value)}
           />
+          <InputBox label="Upload Ligand List" />
           <div className="pt-10">
-            <Button className="w-full" type="submit">
-              추가
+            <Button className="w-full text-2xl" type="submit">
+              Add
             </Button>
           </div>
         </form>
