@@ -9,7 +9,6 @@ import { NumBullet } from "@/app/components/NumBullet";
 import Image from "next/image";
 import { formatDate } from "@/utils/formatTime";
 import { useParams } from "next/navigation";
-import { mockExperiments } from "@/mocks/mockData";
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -22,40 +21,23 @@ export default function JobDetail() {
 
   useEffect(() => {
     if (!isNaN(jobId)) {
-      const loadMockExperiments = () => {
-        const sortedExperiments = mockExperiments.sort((a, b) => {
-          const aValue =
-            a.predicted_value !== null ? a.predicted_value : Infinity;
-          const bValue =
-            b.predicted_value !== null ? b.predicted_value : Infinity;
-          return aValue - bValue;
-        });
-        setExperiments(sortedExperiments);
+      const fetchExperiments = async () => {
+        try {
+          const experiments = await experimentService.getAllExperimentsByJobId(
+            jobId
+          );
+          const sortedExperiments = experiments.sort(
+            (a, b) => a.predicted_value - b.predicted_value
+          );
+          setExperiments(sortedExperiments);
+        } catch (error) {
+          console.error("Failed to fetch experiments:", error);
+        }
       };
 
-      loadMockExperiments();
+      fetchExperiments();
     }
-  }, [jobId]);
-
-  // useEffect(() => {
-  //   if (!isNaN(jobId)) {
-  //     const fetchExperiments = async () => {
-  //       try {
-  //         const experiments = await experimentService.getAllExperimentsByJobId(
-  //           jobId
-  //         );
-  //         const sortedExperiments = experiments.sort(
-  //           (a, b) => a.predicted_value - b.predicted_value
-  //         );
-  //         setExperiments(sortedExperiments);
-  //       } catch (error) {
-  //         console.error("Failed to fetch experiments:", error);
-  //       }
-  //     };
-
-  //     fetchExperiments();
-  //   }
-  // }, [jobId, experimentService]);
+  }, [jobId, experimentService]);
 
   const getIconSrc = (status: number) => {
     switch (status) {
@@ -95,7 +77,6 @@ export default function JobDetail() {
         job_id: jobId,
       });
       alert("Experiment executed successfully!");
-      // Optionally, refetch experiments or update the UI after creating the experiment
     } catch (error) {
       console.error("Failed to execute experiment:", error);
       alert("Failed to execute experiment.");

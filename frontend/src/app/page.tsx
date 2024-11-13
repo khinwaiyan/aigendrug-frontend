@@ -9,20 +9,24 @@ import { useCallback, useState, useEffect } from "react";
 import { useService } from "@/service/useService";
 import { Job } from "@/service/job/interface";
 import { formatDate } from "@/utils/formatTime";
-import { mockJobs } from "@/mocks/mockData";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
-  // const { jobService } = useService();
+  const { jobService } = useService();
 
-  const loadMockJobs = useCallback(() => {
-    setJobs(mockJobs);
-  }, []);
+  const fetchJobs = useCallback(async () => {
+    try {
+      const jobList = await jobService.getAllJobs();
+      setJobs(jobList);
+    } catch (error) {
+      console.error("Failed to fetch jobs:", error);
+    }
+  }, [jobService]);
 
   useEffect(() => {
-    loadMockJobs();
-  }, [loadMockJobs]);
+    fetchJobs();
+  }, [fetchJobs]);
 
   const openJobModal = () => {
     setIsModalOpen(true);
@@ -32,20 +36,19 @@ export default function Home() {
     setIsModalOpen(false);
   };
 
-  // const handleJobAdded = () => {
-  //   fetchJobs(); // Fetch the updated list of jobs
-  // };
-  // const handleDeleteJob = async (id: number) => {
-  //   if (confirm("Are you sure you want to delete this job?")) {
-  //     try {
-  //       await jobService.deleteJob(id);
-  //       fetchJobs(); // Re-fetch jobs after deletion
-  //     } catch (error) {
-  //       console.error("Failed to delete job:", error);
-  //     }
-  //   }
-  // };
-
+  const handleJobAdded = () => {
+    fetchJobs();
+  };
+  const handleDeleteJob = async (id: number) => {
+    if (confirm("Are you sure you want to delete this job?")) {
+      try {
+        await jobService.deleteJob(id);
+        fetchJobs();
+      } catch (error) {
+        console.error("Failed to delete job:", error);
+      }
+    }
+  };
   return (
     <Wrapper>
       <Header label="AIGENDRUG" />
@@ -74,7 +77,7 @@ export default function Home() {
               </Link>
               <span className="col-span-1 flex justify-center">
                 <div
-                  // onClick={() => handleDeleteJob(job.id)}
+                  onClick={() => handleDeleteJob(job.id)}
                   className="cursor-pointer"
                 >
                   <Image
@@ -101,7 +104,9 @@ export default function Home() {
           </Button>
         </div>
       </div>
-      {isModalOpen && <JobModal onClose={closeJobModal} />}
+      {isModalOpen && (
+        <JobModal onClose={closeJobModal} onJobAdded={handleJobAdded} />
+      )}
     </Wrapper>
   );
 }
