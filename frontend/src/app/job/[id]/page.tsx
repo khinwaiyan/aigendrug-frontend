@@ -3,18 +3,20 @@ import { useState, useEffect } from "react";
 import { Button } from "@/app/components/Button";
 import { Header } from "@/app/components/Header";
 import { Wrapper } from "@/app/components/Wrapper";
-import { useService } from "@/service/useService";
+import { useServiceContext } from "@/service/ServiceContext";
 import { Experiment } from "@/service/experiment/interface";
 import { NumBullet } from "@/app/components/NumBullet";
 import Image from "next/image";
 import { formatDate } from "@/utils/formatTime";
 import { useParams } from "next/navigation";
+import { Job } from "@/service/job/interface";
 
 export default function JobDetail() {
   const { id } = useParams();
   const jobId = Number(id);
   const [experiments, setExperiments] = useState<Experiment[]>([]);
-  const { experimentService } = useService();
+  const [job, setJob] = useState<Job>();
+  const { experimentService, jobService } = useServiceContext();
   const [measuredValues, setMeasuredValues] = useState<{
     [key: number]: number;
   }>({});
@@ -41,6 +43,14 @@ export default function JobDetail() {
       fetchExperiments();
     }
   }, [jobId, experimentService]);
+
+  useEffect(() => {
+    const fetchJob = async () => {
+      const job = await jobService.getJobById(jobId);
+      setJob(job);
+    };
+    fetchJob();
+  }, [jobId, jobService]);
 
   const getIconSrc = (status: number) => {
     switch (status) {
@@ -87,7 +97,7 @@ export default function JobDetail() {
 
   return (
     <Wrapper>
-      <Header label="AIGENDRUG" labelR="Protein A" />
+      <Header label="AIGENDRUG" labelR={job?.target_protein_name || ""} />
       <div className="JobDetailTable mt-10 px-4">
         <div className="Header grid grid-cols-8 gap-4 flex items-center text-center bg-cus_navy_light p-4 ">
           <span className="font-bold col-span-1">Rank</span>

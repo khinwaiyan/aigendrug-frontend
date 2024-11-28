@@ -6,16 +6,16 @@ import { Wrapper } from "./components/Wrapper";
 import Link from "next/link";
 import JobModal from "./components/JobModal";
 import { useCallback, useState, useEffect } from "react";
-import { useService } from "@/service/useService";
 import { Job } from "@/service/job/interface";
 import { formatDate } from "@/utils/formatTime";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useServiceContext } from "@/service/ServiceContext";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [jobs, setJobs] = useState<Job[]>([]);
-  const { jobService } = useService();
+  const { jobService } = useServiceContext();
 
   const fetchJobs = useCallback(async () => {
     try {

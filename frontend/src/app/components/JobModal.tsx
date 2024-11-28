@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/app/components/Button";
 import { InputBox } from "@/app/components/InputBox";
-import { useService } from "@/service/useService";
+import { useServiceContext } from "@/service/ServiceContext";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,7 +13,7 @@ type JobModalProps = {
 };
 
 export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
-  const { jobService } = useService();
+  const { jobService } = useServiceContext();
   const [jobName, setJobName] = useState("");
   const [proteinName, setProteinName] = useState("");
 

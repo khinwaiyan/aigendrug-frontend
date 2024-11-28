@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Work_Sans } from "next/font/google";
-
+import { ServiceProvider } from "@/service/ServiceContext";
 const workSans = Work_Sans({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -25,8 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${workSans.className}  antialiased`}>
-        <div>{children}</div>
-        <div>{modal}</div>
+        <ServiceProvider>
+          <div>{children}</div>
+          <div>{modal}</div>
+        </ServiceProvider>
       </body>
     </html>
   );
