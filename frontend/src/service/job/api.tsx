@@ -6,6 +6,25 @@ export class jobService {
 
   constructor(instance: AxiosInstance) {
     this.instance = instance;
+
+    this.instance.interceptors.response.use(
+      (response) => {
+        if (response.data && Array.isArray(response.data)) {
+          response.data = response.data.map((item) => {
+            if (item.created_at) {
+              item.created_at = new Date(item.created_at);
+            }
+            return item;
+          });
+        } else if (response.data && response.data.created_at) {
+          response.data.created_at = new Date(response.data.created_at);
+        }
+        return response;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
   }
 
   public async createJob(jobData: JobCreateDto): Promise<Job> {
