@@ -9,6 +9,8 @@ import { useCallback, useState, useEffect } from "react";
 import { useService } from "@/service/useService";
 import { Job } from "@/service/job/interface";
 import { formatDate } from "@/utils/formatTime";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,20 +40,24 @@ export default function Home() {
 
   const handleJobAdded = () => {
     fetchJobs();
+    toast.success("Job added successfully");
   };
   const handleDeleteJob = async (id: number) => {
     if (confirm("Are you sure you want to delete this job?")) {
       try {
         await jobService.deleteJob(id);
         fetchJobs();
+        toast.success("Job deleted successfully");
       } catch (error) {
         console.error("Failed to delete job:", error);
+        toast.error("Failed to delete job");
       }
     }
   };
   return (
     <Wrapper>
       <Header label="AIGENDRUG" />
+      <ToastContainer position="top-center" />
       <div className="JobTable mt-8">
         <div className="TableHeader grid grid-cols-5 gap-4 text-center bg-cus_navy_light p-4 rounded-lg">
           <span className="font-bold col-span-1">Job</span>
