@@ -12,7 +12,7 @@ export interface Experiment {
 }
 
 export interface ExperimentCreateDto {
-  type: number;
+  type: number; // 0: with measured value, 1: without measured value
   name: string;
   ligand_smiles: string;
   measured_value: number;

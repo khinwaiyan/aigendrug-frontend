@@ -7,6 +7,7 @@ import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { JobFile } from "@/service/job/interface";
+import { SpinnerLoading } from "@/app/components/Loading";
 
 type JobModalProps = {
   onClose: () => void;
@@ -19,9 +20,11 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
   const [proteinName, setProteinName] = useState("");
   const [ligandFile, setLigandFile] = useState<File | null>(null);
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleJobSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!jobName) {
       toast.error("Job Name is required.");
@@ -74,6 +77,8 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
     } catch (error) {
       console.error("Job creation error details:", error);
       toast.error(`Failed to create job`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,6 +92,7 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div className="relative bg-white rounded-lg p-12 shadow-lg w-96">
+          {isLoading && <SpinnerLoading />}
           <button
             className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
             onClick={onClose}

@@ -2,7 +2,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 
 type InputBoxProps = {
   label: string;
-  variant?: "file" | "text";
+  variant?: "file" | "text" | "number";
   className?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -41,13 +41,32 @@ export const InputBox = ({
         </span>
       )}
     </div>
-  ) : (
+  ) : variant === "text" ? (
     <div className="relative">
       <div
         className={`${className} text-cus_gray_light border-4 border-solid border-cus_yellow rounded-md p-3 text-center`}
       >
         <input
           type="text"
+          placeholder={label}
+          className="w-full text-center focus:outline-none bg-transparent"
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+      {hint && (
+        <span className="absolute top-0 right-0 mt-1 mr-4 font-bold text-red-500">
+          {hint}
+        </span>
+      )}
+    </div>
+  ) : (
+    <div className="relative">
+      <div
+        className={`${className} text-cus_gray_light border-4 border-solid border-cus_yellow rounded-md p-3 text-center`}
+      >
+        <input
+          type="number"
           placeholder={label}
           className="w-full text-center focus:outline-none bg-transparent"
           value={value}

@@ -32,7 +32,7 @@ export const Loading = () => {
 
 export const SpinnerLoading = () => {
   return (
-    <div className="absolute inset-0 z-10 flex items-center justify-center  bg-opacity-75 rounded-lg">
+    <div className="absolute inset-0 z-10 flex items-center justify-center  bg-cus_navy_light bg-opacity-75 rounded-lg">
       <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cus_yellow"></div>
     </div>
   );

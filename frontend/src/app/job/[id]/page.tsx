@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/app/components/Button";
 import { Header } from "@/app/components/Header";
 import { Wrapper } from "@/app/components/Wrapper";
@@ -11,7 +11,8 @@ import { formatDate } from "@/utils/formatTime";
 import { useParams } from "next/navigation";
 import { Job } from "@/service/job/interface";
 import { Loading } from "@/app/components/Loading";
-
+import ExperimentModal from "@/app/components/ExperimentModal";
+import { toast } from "react-toastify";
 export default function JobDetail() {
   const { id } = useParams();
   const jobId = Number(id);
@@ -25,32 +26,32 @@ export default function JobDetail() {
   const [selectedExperiments, setSelectedExperiments] = useState<Set<number>>(
     new Set()
   );
+  const [isExperimentModalOpen, setIsExperimentModalOpen] = useState(false);
+
+  const fetchExperiments = useCallback(async () => {
+    setLoading(true);
+    try {
+      const experiments = await experimentService.getAllExperimentsByJobId(
+        jobId
+      );
+      const sortedExperiments = experiments.sort((a, b) => {
+        const aValue = a.predicted_value ?? 0;
+        const bValue = b.predicted_value ?? 0;
+        return aValue - bValue;
+      });
+      setExperiments(sortedExperiments);
+    } catch (error) {
+      console.error("Failed to fetch experiments:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [experimentService, jobId]);
 
   useEffect(() => {
     if (!isNaN(jobId)) {
-      const fetchExperiments = async () => {
-        setLoading(true);
-        try {
-          const experiments = await experimentService.getAllExperimentsByJobId(
-            jobId
-          );
-          const sortedExperiments = experiments.sort((a, b) => {
-            const aValue = a.predicted_value ?? 0;
-            const bValue = b.predicted_value ?? 0;
-            return aValue - bValue;
-          });
-
-          setExperiments(sortedExperiments);
-        } catch (error) {
-          console.error("Failed to fetch experiments:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
       fetchExperiments();
     }
-  }, [jobId, experimentService]);
+  }, [jobId, experimentService, fetchExperiments]);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -130,9 +131,50 @@ export default function JobDetail() {
     }
   };
 
+  const openExperimentModal = () => {
+    setIsExperimentModalOpen(true);
+  };
+
+  const closeExperimentModal = () => {
+    setIsExperimentModalOpen(false);
+  };
+
+  const handleDeleteExperiment = async (experimentId: number) => {
+    if (!confirm("Are you sure you want to delete this experiment?")) {
+      return;
+    }
+
+    try {
+      await experimentService.deleteExperiment(experimentId);
+      fetchExperiments();
+    } catch (error) {
+      console.error("Failed to delete experiment:", error);
+      alert("Failed to delete experiment.");
+    }
+  };
+
+  const handleExperimentAdded = () => {
+    if (!isNaN(jobId)) {
+      fetchExperiments();
+      toast.success("Experiment added successfully");
+    }
+  };
+
   return (
     <Wrapper>
       <Header label="AIGENDRUG" labelR={job?.target_protein_name || ""} />
+      <div className="flex justify-end px-4 mt-4">
+        <Button onClick={openExperimentModal}>
+          {"Add Experiment  "}
+          <Image
+            src="/icons/plus.svg"
+            alt="Plus icon"
+            width={16}
+            height={16}
+            className="inline-block"
+          />
+        </Button>
+      </div>
       {loading ? (
         <Loading />
       ) : (
@@ -218,10 +260,30 @@ export default function JobDetail() {
                 <span className="col-span-1">
                   {formatDate(experiment.created_at)}
                 </span>
+                <span className="col-span-1 flex justify-center">
+                  <div
+                    onClick={() => handleDeleteExperiment(experiment.id)}
+                    className="cursor-pointer"
+                  >
+                    <Image
+                      src="/icons/delete.svg"
+                      alt="Delete Icon"
+                      width={28}
+                      height={28}
+                    />
+                  </div>
+                </span>
               </div>
             ))}
           </div>
         </div>
+      )}
+      {isExperimentModalOpen && (
+        <ExperimentModal
+          jobId={jobId}
+          onClose={closeExperimentModal}
+          onExperimentAdded={handleExperimentAdded}
+        />
       )}
     </Wrapper>
   );
