@@ -28,10 +28,15 @@ export const InputBox = ({
           </span>
           <span>{label}</span>
         </div>
-        <input type="file" className="hidden" accept=".csv" />
+        <input
+          type="file"
+          className="hidden"
+          accept=".csv"
+          onChange={onChange}
+        />
       </label>
       {hint && (
-        <span className="absolute top-0 right-0 mt-1 mr-4 font-bold text-red-500">
+        <span className="absolute top-0 right-0 mt-1 mr-2 text-xs font-bold text-red-500">
           {hint}
         </span>
       )}

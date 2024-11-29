@@ -6,6 +6,7 @@ import { useServiceContext } from "@/service/ServiceContext";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { JobFile } from "@/service/job/interface";
 
 type JobModalProps = {
   onClose: () => void;
@@ -17,6 +18,7 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
   const [jobName, setJobName] = useState("");
   const [proteinName, setProteinName] = useState("");
   const [ligandFile, setLigandFile] = useState<File | null>(null);
+  const [fileUploaded, setFileUploaded] = useState(false);
 
   const handleJobSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,23 +36,51 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
       return;
     }
 
+    if (!ligandFile.name.toLowerCase().endsWith(".csv")) {
+      toast.error("Please upload a CSV file");
+      return;
+    }
+
     try {
-      // First API call - Create job
       const jobResponse = await jobService.createJob({
         name: jobName,
         target_protein_name: proteinName,
       });
 
-      // Second API call - Upload ligand file
-      await jobService.uploadLigandFile(jobResponse.id, ligandFile);
+      if (!jobResponse || !jobResponse.id) {
+        toast.error("Invalid response from server when creating job");
+        return;
+      }
 
-      toast.success("Job created successfully!");
-      onJobAdded();
-      onClose();
+      try {
+        const jobFile: JobFile = {
+          id: jobResponse.id,
+          file: new FormData(),
+        };
+        jobFile.file.append("file", ligandFile);
+
+        await jobService.uploadLigandFile(jobFile);
+        onJobAdded();
+        onClose();
+      } catch (error) {
+        console.error("File upload error details:", error);
+        toast.error(`Failed to upload ligand file:`);
+        try {
+          await jobService.deleteJob(jobResponse.id);
+        } catch {
+          console.error("Failed to cleanup job after file upload error");
+        }
+      }
     } catch (error) {
-      console.error("Failed to create job:", error);
-      toast.error("Failed to create job");
+      console.error("Job creation error details:", error);
+      toast.error(`Failed to create job`);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setLigandFile(file);
+    setFileUploaded(!!file);
   };
 
   return (
@@ -77,21 +107,32 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
               variant="text"
               value={jobName}
               onChange={(e) => setJobName(e.target.value)}
-              hint="*"
             />
             <InputBox
               label="Target Protein Name"
               variant="text"
               value={proteinName}
               onChange={(e) => setProteinName(e.target.value)}
-              hint="*"
             />
-            <InputBox
-              label="Upload Ligand List"
-              variant="file"
-              onChange={(e) => setLigandFile(e.target.files?.[0] || null)}
-              hint="(CSV file)"
-            />
+            <div className="relative">
+              <InputBox
+                label="Upload Ligand List"
+                variant="file"
+                onChange={handleFileChange}
+                hint="(CSV file)"
+              />
+              {fileUploaded && ligandFile && (
+                <div className="mt-2 flex items-center justify-center text-green-600">
+                  <Image
+                    src="/icons/checkCircle.svg"
+                    alt="Upload Complete"
+                    width={20}
+                    height={20}
+                  />
+                  <span className="ml-2">{ligandFile.name} uploaded</span>
+                </div>
+              )}
+            </div>
             <div className="pt-10">
               <Button className="w-full text-2xl" type="submit">
                 Add

@@ -22,6 +22,9 @@ export default function JobDetail() {
     [key: number]: number;
   }>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [selectedExperiments, setSelectedExperiments] = useState<Set<number>>(
+    new Set()
+  );
 
   useEffect(() => {
     if (!isNaN(jobId)) {
@@ -76,27 +79,54 @@ export default function JobDetail() {
     }));
   };
 
-  const handleExecute = async (experimentId: number) => {
-    const measuredValue = measuredValues[experimentId];
+  const handleCheckboxChange = (experimentId: number) => {
+    setSelectedExperiments((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(experimentId)) {
+        newSet.delete(experimentId);
+      } else {
+        newSet.add(experimentId);
+      }
+      return newSet;
+    });
+  };
 
-    if (!measuredValue) {
-      alert("Please enter a valid measured value.");
+  const handleExecuteSelected = async () => {
+    const experimentsToExecute = Array.from(selectedExperiments).map((id) => ({
+      id,
+      measuredValue: measuredValues[id],
+    }));
+
+    if (experimentsToExecute.length === 0) {
+      alert("Please select experiments to run.");
+      return;
+    }
+
+    const invalidExperiments = experimentsToExecute.filter(
+      (exp) => !exp.measuredValue
+    );
+    if (invalidExperiments.length > 0) {
+      alert("Please enter measured values for all selected experiments.");
       return;
     }
 
     try {
-      await experimentService.createExperiment({
-        type: 0,
-        name: `Experiment with measured value ${experimentId}`,
-        ligand_smiles:
-          experiments.find((e) => e.id === experimentId)?.ligand_smiles || "",
-        measured_value: measuredValue,
-        job_id: jobId,
-      });
-      alert("Experiment executed successfully!");
+      await Promise.all(
+        experimentsToExecute.map(({ id, measuredValue }) =>
+          experimentService.createExperiment({
+            type: 0,
+            name: `Experiment with measured value ${id}`,
+            ligand_smiles:
+              experiments.find((e) => e.id === id)?.ligand_smiles || "",
+            measured_value: measuredValue,
+            job_id: jobId,
+          })
+        )
+      );
+      alert("Experiments executed successfully!");
     } catch (error) {
-      console.error("Failed to execute experiment:", error);
-      alert("Failed to execute experiment.");
+      console.error("Failed to execute experiments:", error);
+      alert("Failed to execute experiments.");
     }
   };
 
@@ -107,21 +137,38 @@ export default function JobDetail() {
         <Loading />
       ) : (
         <div className="JobDetailTable mt-10 px-4">
-          <div className="Header grid grid-cols-8 gap-4 flex items-center text-center bg-cus_navy_light p-4 ">
+          <div className="Header grid grid-cols-9 gap-4 flex items-center text-center bg-cus_navy_light p-4 ">
+            <span className="font-bold col-span-1"></span>
             <span className="font-bold col-span-1">Rank</span>
             <span className="font-bold col-span-2">Ligand</span>
             <span className="font-bold col-span-1">Expected Value</span>
             <span className="font-bold col-span-1">Observed Value</span>
             <span className="font-bold col-span-1">Status</span>
             <span className="font-bold col-span-1">Date</span>
-            <span className="col-span-1"></span>
+            <span className="col-span-1">
+              <Button
+                className="col-span-1 text-sm"
+                onClick={handleExecuteSelected}
+                disabled={selectedExperiments.size === 0}
+              >
+                Run
+              </Button>
+            </span>
           </div>
           <div className="Body pt-4">
             {experiments.map((experiment, index) => (
               <div
                 key={experiment.id}
-                className="row1 bg-cus_gray text-cus_navy grid grid-cols-8 gap-4 text-center p-4 my-4 items-center justify-center rounded-lg"
+                className="row1 bg-cus_gray text-cus_navy grid grid-cols-9 gap-4 text-center p-4 my-4 items-center justify-center rounded-lg"
               >
+                <span className="col-span-1">
+                  <input
+                    type="checkbox"
+                    checked={selectedExperiments.has(experiment.id)}
+                    onChange={() => handleCheckboxChange(experiment.id)}
+                    className="w-4 h-4"
+                  />
+                </span>
                 <span className="col-span-1 flex justify-center">
                   <NumBullet label={(index + 1).toString()} />
                 </span>
@@ -171,12 +218,6 @@ export default function JobDetail() {
                 <span className="col-span-1">
                   {formatDate(experiment.created_at)}
                 </span>
-                <Button
-                  className="col-span-1 text-sm"
-                  onClick={() => handleExecute(experiment.id)}
-                >
-                  Run
-                </Button>
               </div>
             ))}
           </div>

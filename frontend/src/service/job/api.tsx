@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import { Job, JobCreateDto } from "./interface";
+import { Job, JobCreateDto, JobFile } from "./interface";
 
 export class jobService {
   private instance: AxiosInstance;
@@ -62,9 +62,12 @@ export class jobService {
     }
   }
 
-  public async uploadLigandFile(id: number, file: File): Promise<void> {
+  public async uploadLigandFile(jobFile: JobFile): Promise<void> {
     try {
-      await this.instance.post(`/job/${id}/upload`, { file });
+      await this.instance.post(
+        `/job/${jobFile.id}/upload-initial-ligand`,
+        jobFile.file
+      );
     } catch (error) {
       throw error;
     }
