@@ -61,4 +61,12 @@ export class jobService {
       throw error;
     }
   }
+
+  public async uploadLigandFile(id: number, file: File): Promise<void> {
+    try {
+      await this.instance.post(`/job/${id}/upload`, { file });
+    } catch (error) {
+      throw error;
+    }
+  }
 }

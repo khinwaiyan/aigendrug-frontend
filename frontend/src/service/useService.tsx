@@ -5,9 +5,9 @@ import { experimentService } from "./experiment/api";
 export const useService = () => {
   const instance = axios.create({
     baseURL: "https://api-aigendrug.lighterlinks.io",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    // headers: {
+    //   "Content-Type": "application/json",
+    // },
   });
 
   instance.interceptors.response.use(

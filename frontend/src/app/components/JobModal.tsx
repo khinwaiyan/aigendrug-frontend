@@ -16,6 +16,7 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
   const { jobService } = useServiceContext();
   const [jobName, setJobName] = useState("");
   const [proteinName, setProteinName] = useState("");
+  const [ligandFile, setLigandFile] = useState<File | null>(null);
 
   const handleJobSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,16 +29,27 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
       toast.error("Target Protein Name is required.");
       return;
     }
+    if (!ligandFile) {
+      toast.error("Ligand List file is required.");
+      return;
+    }
 
     try {
-      await jobService.createJob({
+      // First API call - Create job
+      const jobResponse = await jobService.createJob({
         name: jobName,
         target_protein_name: proteinName,
       });
+
+      // Second API call - Upload ligand file
+      await jobService.uploadLigandFile(jobResponse.id, ligandFile);
+
+      toast.success("Job created successfully!");
       onJobAdded();
       onClose();
     } catch (error) {
       console.error("Failed to create job:", error);
+      toast.error("Failed to create job");
     }
   };
 
@@ -74,7 +86,12 @@ export default function JobModal({ onClose, onJobAdded }: JobModalProps) {
               onChange={(e) => setProteinName(e.target.value)}
               hint="*"
             />
-            <InputBox label="Upload Ligand List" />
+            <InputBox
+              label="Upload Ligand List"
+              variant="file"
+              onChange={(e) => setLigandFile(e.target.files?.[0] || null)}
+              hint="(CSV file)"
+            />
             <div className="pt-10">
               <Button className="w-full text-2xl" type="submit">
                 Add
