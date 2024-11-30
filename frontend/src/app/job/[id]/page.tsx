@@ -51,7 +51,7 @@ export default function JobDetail() {
     if (!isNaN(jobId)) {
       fetchExperiments();
     }
-  }, [jobId, experimentService, fetchExperiments]);
+  }, [jobId, fetchExperiments]);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -155,8 +155,10 @@ export default function JobDetail() {
 
   const handleExperimentAdded = () => {
     if (!isNaN(jobId)) {
-      fetchExperiments();
-      toast.success("Experiment added successfully");
+      setTimeout(() => {
+        fetchExperiments();
+        toast.success("Experiment added successfully");
+      }, 500);
     }
   };
 
