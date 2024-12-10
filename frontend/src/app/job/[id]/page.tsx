@@ -63,6 +63,8 @@ export default function JobDetail() {
 
   const getIconSrc = (status: number) => {
     switch (status) {
+      case 0:
+        return "/icons/checkCircle.svg";
       case 1:
         return "/icons/loader.svg";
       case 2:
@@ -221,42 +223,36 @@ export default function JobDetail() {
                 </span>
                 <span className="col-span-1">{experiment.predicted_value}</span>
 
-                {experiment.measured_value ? (
-                  <span className="col-span-1">
-                    {experiment.measured_value}
-                  </span>
-                ) : (
-                  <input
-                    type="number"
-                    placeholder="실험값"
-                    step="any"
-                    min="0"
-                    max="1"
-                    onChange={(e) =>
-                      handleMeasuredValueChange(experiment.id, e.target.value)
-                    }
-                    className="col-span-1 py-1 border-2 border-cus_yellow text-cus_gray_light text-center rounded-md cursor-pointer"
-                  />
-                )}
+                <input
+                  type="number"
+                  placeholder={
+                    experiment.measured_value?.toString() || "실험값"
+                  }
+                  step="any"
+                  min="0"
+                  max="1"
+                  onChange={(e) =>
+                    handleMeasuredValueChange(experiment.id, e.target.value)
+                  }
+                  className="col-span-1 py-1 border-2 border-cus_yellow text-cus_gray_light text-center rounded-md cursor-pointer"
+                />
 
                 <span className="col-span-1 flex justify-center">
-                  {experiment.training_status !== 0 && (
-                    <Image
-                      src={getIconSrc(experiment.training_status)}
-                      alt={
-                        experiment.training_status === 1
-                          ? "Training"
-                          : experiment.training_status === 2
-                          ? "Trained"
-                          : "Failed"
-                      }
-                      className={
-                        experiment.training_status === 1 ? "animate-spin" : ""
-                      }
-                      width={28}
-                      height={28}
-                    />
-                  )}
+                  <Image
+                    src={getIconSrc(experiment.training_status)}
+                    alt={
+                      experiment.training_status === 1
+                        ? "Training"
+                        : experiment.training_status === 2
+                        ? "Trained"
+                        : "Failed"
+                    }
+                    className={
+                      experiment.training_status === 1 ? "animate-spin" : ""
+                    }
+                    width={28}
+                    height={28}
+                  />
                 </span>
 
                 <span className="col-span-1">
