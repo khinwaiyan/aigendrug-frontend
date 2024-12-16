@@ -237,7 +237,11 @@ export default function JobDetail() {
                 <span className="col-span-2 break-words whitespace-normal">
                   {experiment.ligand_smiles}
                 </span>
-                <span className="col-span-1">{experiment.predicted_value}</span>
+                <span className="col-span-1">
+                  {experiment.predicted_value !== 0
+                    ? experiment.predicted_value
+                    : experiment.measured_value}
+                </span>
 
                 <input
                   type="number"
