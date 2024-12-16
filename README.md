@@ -4,16 +4,6 @@
 
 Welcome to the AIGENDRUG application, a platform designed to manage and monitor jobs and experiments related to AI-driven drug discovery. This manual will guide you through the setup, navigation, and usage of the application.
 
-## Table of Contents
-
-1. [Getting Started]
-2. [Navigating the Application]
-3. [Managing Jobs]
-4. [Managing Experiments]
-5. [Real-time Updates]
-6. [Troubleshooting]
-7. [Support]
-
 ## Getting Started
 
 ### Prerequisites
