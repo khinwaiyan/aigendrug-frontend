@@ -11,8 +11,9 @@ import { formatDate } from "@/utils/formatTime";
 import { useParams } from "next/navigation";
 import { Job } from "@/service/job/interface";
 import { Loading } from "@/app/components/Loading";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import ExperimentModal from "@/app/components/ExperimentModal";
-import { toast } from "react-toastify";
 export default function JobDetail() {
   const { id } = useParams();
   const jobId = Number(id);
@@ -110,7 +111,7 @@ export default function JobDetail() {
     }));
 
     if (experimentsToExecute.length === 0) {
-      alert("Please select experiments to run.");
+      toast.error("Please select experiments to run.");
       return;
     }
 
@@ -118,7 +119,7 @@ export default function JobDetail() {
       (exp) => !exp.measuredValue
     );
     if (invalidExperiments.length > 0) {
-      alert("Please enter measured values for all selected experiments.");
+      toast.error("Please enter measured values for all selected experiments.");
       return;
     }
 
@@ -140,12 +141,12 @@ export default function JobDetail() {
           await experimentService.deleteExperiment(id);
         })
       );
-      alert("Experiments updated successfully!");
+      toast.success("Measured values updated successfully!");
       setSelectedExperiments(new Set());
       await fetchExperiments();
     } catch (error) {
       console.error("Failed to update experiments:", error);
-      alert("Failed to update experiments.");
+      toast.error("Failed to update experiments.");
     }
   };
 
@@ -175,7 +176,7 @@ export default function JobDetail() {
     if (!isNaN(jobId)) {
       setTimeout(() => {
         fetchExperiments();
-        toast.success("Experiment added successfully");
+        toast.success("Experiment added successfully!");
       }, 500);
     }
   };
@@ -183,6 +184,7 @@ export default function JobDetail() {
   return (
     <Wrapper>
       <Header label="AIGENDRUG" labelR={job?.target_protein_name || ""} />
+      <ToastContainer position="top-center" />
       <div className="flex justify-end px-4 mt-4">
         <Button onClick={openExperimentModal}>
           {"Add Experiment  "}
@@ -204,7 +206,7 @@ export default function JobDetail() {
             <span className="font-bold col-span-1">Rank</span>
             <span className="font-bold col-span-2">Ligand</span>
             <span className="font-bold col-span-1">Expected Value</span>
-            <span className="font-bold col-span-1">Observed Value</span>
+            <span className="font-bold col-span-1">Measured Value</span>
             <span className="font-bold col-span-1">Status</span>
             <span className="font-bold col-span-1">Date</span>
             <span className="col-span-1">

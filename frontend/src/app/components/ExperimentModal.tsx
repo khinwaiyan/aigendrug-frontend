@@ -92,7 +92,7 @@ export default function ExperimentModal({
             New Experiment
           </h2>
           <InputBox
-            label="실험 이름"
+            label="Experiment Name"
             variant="text"
             value={name}
             onChange={handleNameChange}
@@ -100,7 +100,7 @@ export default function ExperimentModal({
           />
           <InputBox
             className="text-cus_gray_light"
-            label="Ligand SMILES 입력"
+            label="Ligand SMILES"
             variant="text"
             value={ligand}
             onChange={handleLigandChange}
@@ -108,14 +108,14 @@ export default function ExperimentModal({
           />
           <InputBox
             className="text-cus_gray_light"
-            label="실험값"
+            label="Measured Value"
             variant="number"
             value={measuredValue?.toString() || ""}
             onChange={handleMeasuredValueChange}
           />
           <div className="pt-10">
             <Button className="w-full" type="submit">
-              추가
+              Add
             </Button>
           </div>
         </form>
