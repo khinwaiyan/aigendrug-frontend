@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to the **AIGENDRUG** application! This platform is designed to help manage and monitor jobs and experiments related to AI-driven IC-50 prediction. This guide will walk you through the setup, navigation, and usage of the application.
+Welcome to the **AIGENDRUG**! This platform is designed to help manage and monitor jobs and experiments related to AI-driven IC-50 prediction. This guide will walk you through the setup, navigation, and usage of the application.
 
 ---
 
