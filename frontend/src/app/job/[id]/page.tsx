@@ -28,28 +28,37 @@ export default function JobDetail() {
   );
   const [isExperimentModalOpen, setIsExperimentModalOpen] = useState(false);
 
-  const fetchExperiments = useCallback(async () => {
-    setLoading(true);
-    try {
-      const experiments = await experimentService.getAllExperimentsByJobId(
-        jobId
-      );
-      const sortedExperiments = experiments.sort((a, b) => {
-        const aValue = a.predicted_value ?? 0;
-        const bValue = b.predicted_value ?? 0;
-        return aValue - bValue;
-      });
-      setExperiments(sortedExperiments);
-    } catch (error) {
-      console.error("Failed to fetch experiments:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [experimentService, jobId]);
+  const fetchExperiments = useCallback(
+    async (showLoading = true) => {
+      if (showLoading) setLoading(true);
+      try {
+        const experiments = await experimentService.getAllExperimentsByJobId(
+          jobId
+        );
+        const sortedExperiments = experiments.sort((a, b) => {
+          if (a.training_status === 1 && b.training_status !== 1) return -1;
+          if (a.training_status !== 1 && b.training_status === 1) return 1;
+
+          const aValue = a.predicted_value ?? 0;
+          const bValue = b.predicted_value ?? 0;
+          return aValue - bValue;
+        });
+        setExperiments(sortedExperiments);
+      } catch (error) {
+        console.error("Failed to fetch experiments:", error);
+      } finally {
+        if (showLoading) setLoading(false);
+      }
+    },
+    [experimentService, jobId]
+  );
 
   useEffect(() => {
     if (!isNaN(jobId)) {
       fetchExperiments();
+      const intervalId = setInterval(() => fetchExperiments(false), 5000);
+
+      return () => clearInterval(intervalId);
     }
   }, [jobId, fetchExperiments]);
 
@@ -115,21 +124,28 @@ export default function JobDetail() {
 
     try {
       await Promise.all(
-        experimentsToExecute.map(({ id, measuredValue }) =>
-          experimentService.createExperiment({
-            type: 0,
-            name: `Experiment with measured value ${id}`,
-            ligand_smiles:
-              experiments.find((e) => e.id === id)?.ligand_smiles || "",
+        experimentsToExecute.map(async ({ id, measuredValue }) => {
+          const existingExperiment = await experimentService.getExperimentById(
+            id
+          );
+
+          await experimentService.createExperiment({
+            type: existingExperiment.type,
+            name: existingExperiment.name,
+            ligand_smiles: existingExperiment.ligand_smiles,
             measured_value: measuredValue,
-            job_id: jobId,
-          })
-        )
+            job_id: existingExperiment.job_id,
+          });
+
+          await experimentService.deleteExperiment(id);
+        })
       );
-      alert("Experiments executed successfully!");
+      alert("Experiments updated successfully!");
+      setSelectedExperiments(new Set());
+      await fetchExperiments();
     } catch (error) {
-      console.error("Failed to execute experiments:", error);
-      alert("Failed to execute experiments.");
+      console.error("Failed to update experiments:", error);
+      alert("Failed to update experiments.");
     }
   };
 
