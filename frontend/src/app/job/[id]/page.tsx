@@ -36,7 +36,8 @@ export default function JobDetail() {
         const experiments = await experimentService.getAllExperimentsByJobId(
           jobId
         );
-        const sortedExperiments = experiments.sort((a, b) => {
+        const filteredExperiments = experiments.filter((exp) => exp.type !== 2);
+        const sortedExperiments = filteredExperiments.sort((a, b) => {
           if (a.training_status === 1 && b.training_status !== 1) return -1;
           if (a.training_status !== 1 && b.training_status === 1) return 1;
 
@@ -74,7 +75,7 @@ export default function JobDetail() {
   const getIconSrc = (status: number) => {
     switch (status) {
       case 0:
-        return "/icons/checkCircle.svg";
+        return "/icons/loader.svg";
       case 1:
         return "/icons/loader.svg";
       case 2:
@@ -130,6 +131,7 @@ export default function JobDetail() {
             id
           );
 
+          // if (existingExperiment.type === 0 || existingExperiment.type === 1) {
           await experimentService.createExperiment({
             type: existingExperiment.type,
             name: existingExperiment.name,
@@ -137,6 +139,7 @@ export default function JobDetail() {
             measured_value: measuredValue,
             job_id: existingExperiment.job_id,
           });
+          //          }
 
           await experimentService.deleteExperiment(id);
         })
@@ -239,25 +242,39 @@ export default function JobDetail() {
                 <span className="col-span-2 break-words whitespace-normal">
                   {experiment.ligand_smiles}
                 </span>
-                <span className="col-span-1">
+                <span
+                  className={`col-span-1 ${
+                    experiment.type === 0 ? "opacity-50" : ""
+                  }`}
+                >
                   {experiment.predicted_value !== 0
                     ? experiment.predicted_value
-                    : experiment.measured_value}
+                    : "-"}
                 </span>
 
-                <input
-                  type="number"
-                  placeholder={
-                    experiment.measured_value?.toString() || "실험값"
-                  }
-                  step="any"
-                  min="0"
-                  max="1"
-                  onChange={(e) =>
-                    handleMeasuredValueChange(experiment.id, e.target.value)
-                  }
-                  className="col-span-1 py-1 border-2 border-cus_yellow text-cus_gray_light text-center rounded-md cursor-pointer"
-                />
+                {experiment.type === 0 ? (
+                  <span className="col-span-1 py-1 text-center">
+                    {experiment.measured_value !== 0
+                      ? experiment.measured_value?.toString()
+                      : "실험값"}
+                  </span>
+                ) : (
+                  <input
+                    type="number"
+                    placeholder={
+                      experiment.measured_value !== 0
+                        ? experiment.measured_value?.toString()
+                        : "실험값"
+                    }
+                    step="any"
+                    min="0"
+                    max="1"
+                    onChange={(e) =>
+                      handleMeasuredValueChange(experiment.id, e.target.value)
+                    }
+                    className="col-span-1 py-1 border-2 border-cus_yellow text-cus_gray_light text-center rounded-md cursor-pointer"
+                  />
+                )}
 
                 <span className="col-span-1 flex justify-center">
                   <Image
