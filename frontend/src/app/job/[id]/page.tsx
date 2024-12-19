@@ -244,7 +244,7 @@ export default function JobDetail() {
                 </span>
                 <span
                   className={`col-span-1 ${
-                    experiment.type === 0 ? "opacity-50" : ""
+                    experiment.type === 0 ? "opacity-25" : ""
                   }`}
                 >
                   {experiment.predicted_value !== 0
